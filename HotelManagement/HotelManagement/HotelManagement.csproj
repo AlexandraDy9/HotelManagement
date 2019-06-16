@@ -1,0 +1,237 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{27A4E33A-8EA1-4BF4-800A-670358A52DB2}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>HotelManagement</RootNamespace>
+    <AssemblyName>HotelManagement</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="BitmapNet, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Bitmap.Net.1.0.1\lib\netstandard2.0\BitmapNet.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Compile Include="AdminWindow.xaml.cs">
+      <DependentUpon>AdminWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ClientWindow.xaml.cs">
+      <DependentUpon>ClientWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="CommandsForAdmin\CommandsForPrices\AddRoomPriceCommand.cs" />
+    <Compile Include="CommandsForAdmin\CommandsForPrices\AddServicePriceCommand.cs" />
+    <Compile Include="CommandsForAdmin\CommandsForRooms\AddFeaturesToRoomCommand.cs" />
+    <Compile Include="CommandsForAdmin\CommandsForRooms\AddRoomCommand.cs" />
+    <Compile Include="CommandsForAdmin\CommandsForEmployee\AddEmployeeCommand.cs" />
+    <Compile Include="CommandsForAdmin\CommandsForFeatures\AddFeaturesCommand.cs" />
+    <Compile Include="CommandsForAdmin\CommandsForFeatures\DeleteFeaturesCommand.cs" />
+    <Compile Include="CommandsForAdmin\CommandsForFeatures\UpdateFeaturesCommand.cs" />
+    <Compile Include="CommandsForAdmin\CommandsForRooms\DeleteFeaturesFromRoomCommand.cs" />
+    <Compile Include="CommandsForAdmin\CommandsForSales\AddSalesCommand.cs" />
+    <Compile Include="CommandsForAdmin\CommandsForSales\DeleteSalesCommand.cs" />
+    <Compile Include="CommandsForAdmin\CommandsForSales\UpdateSalesCommand.cs" />
+    <Compile Include="CommandsForAdmin\CommandsForServices\AddServicesCommand.cs" />
+    <Compile Include="CommandsForAdmin\CommandsForServices\DeleteServicesCommand.cs" />
+    <Compile Include="CommandsForAdmin\CommandsForServices\UpdateServicesCommand.cs" />
+    <Compile Include="DataAccessLayer\DALHelper.cs" />
+    <Compile Include="CommandsForAdmin\CommandsForEmployee\DeleteEmployeeCommand.cs" />
+    <Compile Include="CommandsForAdmin\CommandsForEmployee\UpdateEmployeeCommand.cs" />
+    <Compile Include="CommandsForAdmin\CommandsForRooms\DeleteRoomCommand.cs" />
+    <Compile Include="CommandsForAdmin\CommandsForRooms\UpdateRoomCommand.cs" />
+    <Compile Include="CommandsForClient\CheckClientReservationsCommand.cs" />
+    <Compile Include="CommandsForClient\NewReservationCommand.cs" />
+    <Compile Include="CommandsForEmployee\ChangeStateOfReservationCommand.cs" />
+    <Compile Include="CommandsForUnauthenticated\SearchRoomsAfterDate.cs" />
+    <Compile Include="Commands\CommandBase.cs" />
+    <Compile Include="Commands\ExitCommand.cs" />
+    <Compile Include="Commands\LogOutCommand.cs" />
+    <Compile Include="Commands\RoomDetailsCommand.cs" />
+    <Compile Include="Commands\UpdateUserCommand.cs" />
+    <Compile Include="Converter.cs" />
+    <Compile Include="DataAccessLayer\AdditionalServicesDAL.cs" />
+    <Compile Include="DataAccessLayer\FeaturesDAL.cs" />
+    <Compile Include="DataAccessLayer\ReservationDAL.cs" />
+    <Compile Include="DataAccessLayer\RoomDAL.cs" />
+    <Compile Include="DataAccessLayer\SalesDAL.cs" />
+    <Compile Include="DataAccessLayer\UserDAL.cs" />
+    <Compile Include="EmployeeWindow.xaml.cs">
+      <DependentUpon>EmployeeWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="EntityLayer\Features.cs" />
+    <Compile Include="HotelDataBaseDataSet.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>HotelDataBaseDataSet.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="Commands\LoginCommand.cs" />
+    <Compile Include="EntityLayer\AdditionalServices.cs" />
+    <Compile Include="EntityLayer\Prices.cs" />
+    <Compile Include="EntityLayer\Reservation.cs" />
+    <Compile Include="EntityLayer\Room.cs" />
+    <Compile Include="EntityLayer\Sales.cs" />
+    <Compile Include="RoomDetailsWindow.xaml.cs">
+      <DependentUpon>RoomDetailsWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ViewModels\AdminViewModel.cs" />
+    <Compile Include="ViewModels\ClientViewModel.cs" />
+    <Compile Include="ViewModels\EmployeeViewModel.cs" />
+    <Compile Include="ViewModels\LoginViewModel.cs" />
+    <Compile Include="Commands\RegisterCommand.cs" />
+    <Compile Include="UnauthenticatedUser.xaml.cs">
+      <DependentUpon>UnauthenticatedUser.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Commands\UnauthenticatedUserCommand.cs" />
+    <Compile Include="EntityLayer\User.cs" />
+    <Compile Include="ViewModels\RoomDetailsViewModel.cs" />
+    <Compile Include="ViewModels\UnauthenticatedViewModel.cs" />
+    <Compile Include="ViewModels\ViewModelBase.cs" />
+    <Page Include="AdminWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ClientWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="EmployeeWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Page Include="RoomDetailsWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UnauthenticatedUser.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="HotelDataBaseDataSet.xsc">
+      <DependentUpon>HotelDataBaseDataSet.xsd</DependentUpon>
+    </None>
+    <None Include="HotelDataBaseDataSet.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>HotelDataBaseDataSet.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="HotelDataBaseDataSet.xss">
+      <DependentUpon>HotelDataBaseDataSet.xsd</DependentUpon>
+    </None>
+    <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\HotelIcon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Exit.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\LogOut.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\double.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\cvadrupla.jpg" />
+    <Resource Include="Images\deluxe.jpg" />
+    <Resource Include="Images\queen.jpg" />
+    <Resource Include="Images\single.jpg" />
+    <Resource Include="Images\triple.jpg" />
+    <Resource Include="Images\twin.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\admin.gif" />
+    <Resource Include="Images\employees.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\user.png" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

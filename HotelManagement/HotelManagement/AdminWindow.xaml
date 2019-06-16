@@ -1,0 +1,668 @@
+﻿<Window x:Class="HotelManagement.AdminWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:HotelManagement"
+        mc:Ignorable="d"
+        Background="#4d94ff" Height="460" Width="800"
+        Title="Admin"
+        Icon="Images/admin.gif">
+
+    <Window.Resources>
+        <local:Converter x:Key="Converter"/>
+
+        <Style TargetType="{x:Type Button}" x:Key="ButtonColor">
+            <Setter Property="Background" Value=" #b3ecff"/>
+            <Setter Property="Margin" Value="5,0,0,0"></Setter>
+            <Setter Property="Width" Value="100"></Setter>
+            <Setter Property="Height" Value="25"></Setter>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="4,4,4,4" BorderBrush="#ccc" BorderThickness="0,1,1,0">
+                            <ContentPresenter x:Name="contentPresenter" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" 
+                                              HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" 
+                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#1ac6ff"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style TargetType="{x:Type Button}" x:Key="ButtonColorSearch">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="Margin" Value="5,10,0,0"></Setter>
+            <Setter Property="Width" Value="70"></Setter>
+            <Setter Property="Height" Value="25"></Setter>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="4,4,4,4" BorderBrush="#ccc" BorderThickness="0,1,1,0">
+                            <ContentPresenter x:Name="contentPresenter" ContentTemplate="{TemplateBinding ContentTemplate}" 
+                                              Content="{TemplateBinding Content}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" 
+                                              Margin="{TemplateBinding Padding}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#FF12A5D6"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+
+
+    <Grid>
+        <Menu Height="18" VerticalAlignment="Top" HorizontalAlignment="Stretch" Grid.Row="0" Grid.ColumnSpan="2">
+            <MenuItem Header="Room">
+                <MenuItem Header="Create" Click="AddRoomClick"/>
+                <MenuItem Header="Update" Click="UpdateRoomClick"/>
+                <MenuItem Header="Delete" Command="{Binding DeleteRoomCommand}" CommandParameter="{Binding Path = SelectedRoom}"/>
+                <MenuItem Header="Add Feature" Click="AddFeaturesForRoomClick"/>
+                <MenuItem Header="Delete Feature" Click="DeleteFeaturesForRoomClick"/>
+            </MenuItem>
+            <MenuItem Header="Features">
+                <MenuItem Header="Create" Click="AddFeaturesClick"/>
+                <MenuItem Header="Update" Click="UpdateFeaturesClick"/>
+                <MenuItem Header="Delete" Click="DeleteFeaturesClick"/>
+            </MenuItem>
+            <MenuItem Header="Additional services" >
+                <MenuItem Header="Create" Click="AddServicesClick"/>
+                <MenuItem Header="Update" Click="UpdateServicesClick"/>
+                <MenuItem Header="Delete" Click="DeleteServicesClick"/>
+            </MenuItem>
+            <MenuItem Header="Sales">
+                <MenuItem Header="Create" Click="AddSalesClick"/>
+                <MenuItem Header="Update" Click="UpdateSalesClick"/>
+                <MenuItem Header="Delete" Click="DeleteSalesClick"/>
+            </MenuItem>
+            <MenuItem Header="Prices">
+                <MenuItem Header="Price for Room">
+                    <MenuItem Header="Create"  Click="AddRoomPriceClick"/>
+                    <MenuItem Header="Update"/>
+                    <MenuItem Header="Delete"/>
+                </MenuItem>
+                <MenuItem Header="Price for Service" >
+                    <MenuItem Header="Create" Click="AddServicePriceClick"/>
+                    <MenuItem Header="Update"/>
+                    <MenuItem Header="Delete"/>
+                </MenuItem>
+            </MenuItem>
+            <MenuItem Header="Employees">
+                <MenuItem Header="Create" Click="AddEmployeeClick"/>
+                <MenuItem Header="Update" Click="UpdateEmployeeClick"/>
+                <MenuItem Header="Delete" Click="DeleteEmployeeClick"/>
+            </MenuItem>
+        </Menu>
+
+        <Button Background="{x:Null}" Height="30" Margin="736,375,10,14" Command="{Binding LogOutCommand}" 
+                CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}">
+            <Image Source="Images\LogOut.png"/>
+        </Button>
+
+        <Image Margin="526,23,30,253" Source="Images/admin.gif"/>
+
+        <WrapPanel Margin="0,0,-45,0">
+
+            <ListView x:Name="ListView" ItemsSource = "{Binding Rooms, UpdateSourceTrigger=PropertyChanged}" SelectedItem = "{Binding SelectedRoom}" 
+                      Margin="10,40,100,0" Height="354" Width="502" >
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Header = "Image" Width="150">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Image Source="{Binding Image}" Width="100" Height="70"/>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn Header = "Room Type" DisplayMemberBinding = "{Binding Type}" Width="70"/>
+                        <GridViewColumn Header = "Price" DisplayMemberBinding = "{Binding Price}" Width="80"/>
+                        <GridViewColumn Header = "Features" Width="90">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Style="{StaticResource ButtonColorSearch}" Content="View Details" 
+                                            Command="{Binding ElementName=ListView, Path=DataContext.RoomDetailsCommand}" CommandParameter="{Binding }" />
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn Header = "Number" DisplayMemberBinding = "{Binding NumberOfRooms}" Width="80"/>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+
+            <!--Input Boxes for rooms-->
+            <Grid x:Name="InputBox" Visibility="Collapsed" Height="349">
+                <Grid Opacity="0.5"/>
+                <Border Background="#4dd2ff" BorderThickness="1" CornerRadius="0,55,0,55" HorizontalAlignment="Left" 
+                        VerticalAlignment="Bottom"  Width="264" Margin="-91,0,0,0" Height="204">
+                    <StackPanel Margin="0,-1">
+                        <TextBlock Margin="79,5,61,5" Text="New Room" FontWeight="Bold" FontSize="14" FontFamily="Times New Roman" />
+                        <TextBlock Margin="37,5,5,5" Text="Enter the type:" FontWeight="Bold" FontFamily="Times New Roman" />
+                        <TextBox x:Name="givenType"  MinWidth="150" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="47,0,51,0" Width="146" Height="19"/>
+                        <TextBlock Margin="37,5,5,5" Text="Enter the number of rooms:" FontWeight="Bold" FontFamily="Times New Roman" />
+                        <TextBox x:Name="givenNumber"  MinWidth="150" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="47,0,51,0" Width="146" Height="19"/>
+                        <TextBlock Margin="37,5,5,5" Text="Enter the name of photo (with extension):" FontWeight="Bold" FontFamily="Times New Roman" />
+                        <TextBox x:Name="givenImage"  MinWidth="150" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="47,0,51,0" Width="146" Height="19"/>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="36,0,38,0" Width="88">
+                            <Button Command="{Binding AddRoomCommand}" 
+                                    Click="ButtonClick" Margin="5" Content="Yes" Background="{x:Null}" Width="27">
+                                <Button.CommandParameter>
+                                    <MultiBinding Converter="{StaticResource Converter}">
+                                        <Binding ElementName="givenType" Path="Text"/>
+                                        <Binding ElementName="givenNumber" Path="Text"/>
+                                        <Binding ElementName="givenImage" Path="Text"/>
+                                    </MultiBinding>
+                                </Button.CommandParameter>
+                            </Button>
+                            <Button Click="ButtonClick" Margin="5" Content="No" Background="{x:Null}" Width="26" />
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+            </Grid>
+
+            <Grid x:Name="InputBoxRoomFeatures" Visibility="Collapsed">
+                <Grid Opacity="0.5"/>
+                <Border MinWidth="250" Background="#4dd2ff" BorderThickness="1" CornerRadius="15,15,15,15" HorizontalAlignment="Left" 
+                        VerticalAlignment="Center"  Width="265" Margin="-91,103,0,31" Height="260">
+                    <StackPanel Margin="0,-1">
+                        <TextBlock Margin="70,10,50,5" Text="Add features to room" FontWeight="Bold" FontSize="14" FontFamily="Times New Roman" />
+                        <ListView x:Name="Features" ItemsSource = "{Binding Features, UpdateSourceTrigger=PropertyChanged}" Margin="35,0,17.4,0" Height="184" Width="210">
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn Header = "Feature" DisplayMemberBinding = "{Binding Name}" Width="130"/>
+                                    <GridViewColumn Header = "Choice" Width="80">
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBox Text="{Binding Choosen}" Width = "40"/>
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="50,10,38,0" Width="88">
+                            <Button Command="{Binding AddFeaturesToRoomCommand}" 
+                                      Margin="5" Content="Yes" Background="White" Width="27" Click="ButtonFeaturesToRoomClick">
+                                <Button.CommandParameter>
+                                    <MultiBinding Converter="{StaticResource Converter}">
+                                        <Binding Path = "SelectedRoom"/>
+                                        <Binding ElementName="Features"/>
+                                    </MultiBinding>
+                                </Button.CommandParameter>
+                            </Button>
+                            <Button Margin="5" Click="ButtonFeaturesToRoomClick" Content="No" Background="White" Width="26"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+            </Grid>
+
+            <Grid x:Name="InputBoxDeleteRoomFeatures" Visibility="Collapsed">
+                <Grid Opacity="0.5"/>
+                <Border MinWidth="250" Background="#4dd2ff" BorderThickness="1" CornerRadius="15,15,15,15" HorizontalAlignment="Left" 
+                        VerticalAlignment="Center"  Width="265"  Margin="-91,104,0,30" Height="260">
+                    <StackPanel Margin="0,-1">
+                        <TextBlock Margin="70,10,30,5" Text="Delete features from room" FontWeight="Bold" FontSize="14" FontFamily="Times New Roman" />
+                        <ListView x:Name="DeleteFeatures" ItemsSource = "{Binding Features, UpdateSourceTrigger=PropertyChanged}" Margin="35,0,17.4,0" Height="184" Width="210">
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn Header = "Feature" DisplayMemberBinding = "{Binding Name}" Width="130"/>
+                                    <GridViewColumn Header = "Choice" Width="80">
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBox Text="{Binding Choosen}" Width = "40"/>
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="50,10,38,0" Width="88">
+                            <Button Command="{Binding DeleteFeaturesFromRoomCommand}" 
+                                      Margin="5" Content="Yes" Background="White" Width="27" Click="ButtonDeleteFeaturesFromRoomClick">
+                                <Button.CommandParameter>
+                                    <MultiBinding Converter="{StaticResource Converter}">
+                                        <Binding Path = "SelectedRoom"/>
+                                        <Binding ElementName="Features"/>
+                                    </MultiBinding>
+                                </Button.CommandParameter>
+                            </Button>
+                            <Button Margin="5" Click="ButtonDeleteFeaturesFromRoomClick" Content="No" Background="White" Width="26"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+            </Grid>
+
+            <Grid x:Name="InputBoxUpdate" Visibility="Collapsed" Height="351">
+                <Grid Opacity="0.5"/>
+                <Border Background="#4dd2ff" BorderThickness="1" CornerRadius="0,55,0,55" HorizontalAlignment="Left" 
+                        VerticalAlignment="Center"  Width="238" Margin="-75,156,-76,0" Height="195">
+                    <StackPanel Margin="0,9,0,-1">
+                        <TextBlock Margin="79,5,61,5" Text="Update Room" FontWeight="Bold" FontSize="14" FontFamily="Times New Roman" />
+                        <TextBlock Margin="37,5,5,5" Text="Enter the type:" FontWeight="Bold" FontFamily="Times New Roman" />
+                        <TextBox x:Name="givenTypeForUpdate"  MinWidth="150" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="47,0,51,0" Width="146" Height="19"/>
+                        <TextBlock Margin="37,5,5,5" Text="Enter the number of rooms:" FontWeight="Bold" FontFamily="Times New Roman" />
+                        <TextBox x:Name="givenNumberForUpdate"  MinWidth="150" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="47,0,51,0" Width="146" Height="19"/>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="36,0,38,0" Width="88">
+                            <Button Command="{Binding UpdateRoomCommand}" Click="ButtonUpdateClick" Margin="5" Content="Yes" Background="{x:Null}" Width="27">
+                                <Button.CommandParameter>
+                                    <MultiBinding Converter="{StaticResource Converter}">
+                                        <Binding Path = "SelectedRoom"/>
+                                        <Binding ElementName="givenTypeForUpdate" Path="Text"/>
+                                        <Binding ElementName="givenNumberForUpdate" Path="Text"/>
+                                    </MultiBinding>
+                                </Button.CommandParameter>
+                            </Button>
+                            <Button Click="ButtonUpdateClick" Margin="5" Content="No" Background="{x:Null}" Width="26" />
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+            </Grid>
+
+
+
+
+            <!--Input Boxes for features-->
+            <Grid x:Name="InputBoxFeaturesAdd" Visibility="Collapsed">
+                <Grid Opacity="0.5"/>
+                <Border MinWidth="250" Background="#4dd2ff" BorderThickness="1" CornerRadius="0,55,0,55" HorizontalAlignment="Left" 
+                        VerticalAlignment="Center"  Width="164" Margin="-87,214,0,58" Height="122">
+                    <StackPanel Margin="0,-1">
+                        <TextBlock Margin="79,5,61,5" Text="New Features" FontWeight="Bold" FontSize="14" FontFamily="Times New Roman" />
+                        <TextBlock Margin="37,5,5,5" Text="Enter the name:" FontWeight="Bold" FontFamily="Times New Roman" />
+                        <TextBox x:Name="givenFeaturesName"  MinWidth="150" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="47,0,51,0" Width="146" Height="19"/>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="36,0,38,0" Width="88">
+                            <Button Command="{Binding AddFeaturesCommand}" 
+                                    Click="ButtonAddFeaturesClick" Margin="5" Content="Yes" Background="{x:Null}" Width="27" 
+                                    CommandParameter="{Binding ElementName=givenFeaturesName, Path=Text}"/>
+                            <Button Click="ButtonAddFeaturesClick" Margin="5" Content="No" Background="{x:Null}" Width="26" />
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+            </Grid>
+
+            <Grid x:Name="InputBoxFeaturesUpdate" Visibility="Collapsed">
+                <Grid Opacity="0.5"/>
+                <Border MinWidth="250" Background="#4dd2ff" BorderThickness="1" CornerRadius="0,55,0,55" HorizontalAlignment="Left" 
+                        VerticalAlignment="Center"  Width="164" Margin="-87,202,0,38" Height="154">
+                    <StackPanel Margin="0,-1">
+                        <TextBlock Margin="79,5,61,5" Text="Update Features" FontWeight="Bold" FontSize="14" FontFamily="Times New Roman" />
+                        <TextBlock Margin="37,5,5,5" Text="What features would you like to change?" FontWeight="Bold" FontFamily="Times New Roman" />
+                        <TextBox x:Name="givenNameForUpdate"  MinWidth="150" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="47,0,51,0" Width="146" Height="19"/>
+                        <TextBlock Margin="37,5,5,5" Text="Enter the new name:" FontWeight="Bold" FontFamily="Times New Roman" />
+                        <TextBox x:Name="givenNameUpdate"  MinWidth="150" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="47,0,51,0" Width="146" Height="19"/>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="36,0,38,0" Width="88">
+                            <Button Command="{Binding UpdateFeaturesCommand}" Click="ButtonUpdateFeaturesClick" Margin="5" Content="Yes" Background="{x:Null}" Width="27">
+                                <Button.CommandParameter>
+                                    <MultiBinding Converter="{StaticResource Converter}">
+                                        <Binding ElementName="givenNameForUpdate" Path="Text"/>
+                                        <Binding ElementName="givenNameUpdate" Path="Text"/>
+                                    </MultiBinding>
+                                </Button.CommandParameter>
+                            </Button>
+                            <Button Click="ButtonUpdateFeaturesClick" Margin="5" Content="No" Background="{x:Null}" Width="26" />
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+            </Grid>
+
+            <Grid x:Name="InputBoxFeaturesDelete" Visibility="Collapsed">
+                <Grid Opacity="0.5"/>
+                <Border MinWidth="250" Background="#4dd2ff" BorderThickness="1" CornerRadius="0,55,0,55" HorizontalAlignment="Left" 
+                        VerticalAlignment="Center"  Width="164" Margin="-77,204,0,66" Height="124">
+                    <StackPanel Margin="0,-1">
+                        <TextBlock Margin="79,5,61,5" Text="Delete Features" FontWeight="Bold" FontSize="14" FontFamily="Times New Roman" />
+                        <TextBlock Margin="37,5,5,5" Text="Which features would you like to delete?" FontWeight="Bold" FontFamily="Times New Roman" />
+                        <TextBox x:Name="givenNameForDelete"  MinWidth="150" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="47,0,51,0" Width="146" Height="19"/>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="36,0,38,0" Width="88">
+                            <Button Command="{Binding DeleteFeaturesCommand}" CommandParameter="{Binding ElementName=givenNameForDelete, Path=Text}" 
+                                    Click="ButtonDeleteFeaturesClick" Margin="5" Content="Yes" Background="{x:Null}" Width="27"/>
+                            <Button Click="ButtonDeleteFeaturesClick" Margin="5" Content="No" Background="{x:Null}" Width="26" />
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+            </Grid>
+
+
+
+
+            <!--Input Boxes for additional services-->
+            <Grid x:Name="InputBoxServicesAdd" Visibility="Collapsed">
+                <Grid Opacity="0.5"/>
+                <Border MinWidth="250" Background="#4dd2ff" BorderThickness="1" CornerRadius="0,55,0,55" HorizontalAlignment="Left" 
+                        VerticalAlignment="Center"  Width="164" Margin="-87,196,0,80" Height="118">
+                    <StackPanel Margin="0,-1">
+                        <TextBlock Margin="37,5,61,5" Text="New Additional Services" FontWeight="Bold" FontSize="14" FontFamily="Times New Roman" Height="19" />
+                        <TextBlock Margin="37,5,5,5" Text="Enter the name:" FontWeight="Bold" FontFamily="Times New Roman" />
+                        <TextBox x:Name="givenServicessName"  MinWidth="150" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="47,0,51,0" Width="146" Height="19"/>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="36,0,38,0" Width="88">
+                            <Button Command="{Binding AddServicesCommand}" 
+                                    Click="ButtonAddServicesClick" Margin="5" Content="Yes" Background="{x:Null}" Width="27" 
+                                    CommandParameter="{Binding ElementName=givenServicesName, Path=Text}"/>
+                            <Button Click="ButtonAddServicesClick" Margin="5" Content="No" Background="{x:Null}" Width="26" />
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+            </Grid>
+
+            <Grid x:Name="InputBoxServicesUpdate" Visibility="Collapsed">
+                <Grid Opacity="0.5"/>
+                <Border MinWidth="250" Background="#4dd2ff" BorderThickness="1" CornerRadius="0,55,0,55" HorizontalAlignment="Left" 
+                        VerticalAlignment="Center"  Width="164" Margin="-87,196,0,52" Height="146">
+                    <StackPanel Margin="0,-1">
+                        <TextBlock Margin="79,5,61,5" Text="Update Services" FontWeight="Bold" FontSize="14" FontFamily="Times New Roman" />
+                        <TextBlock Margin="37,5,5,5" Text="What Services would you like to change?" FontWeight="Bold" FontFamily="Times New Roman" />
+                        <TextBox x:Name="givenServicesNameForUpdate"  MinWidth="150" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="47,0,51,0" Width="146" Height="19"/>
+                        <TextBlock Margin="37,5,5,5" Text="Enter the new name:" FontWeight="Bold" FontFamily="Times New Roman" />
+                        <TextBox x:Name="givenServicesNameUpdated"  MinWidth="150" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="47,0,51,0" Width="146" Height="19"/>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="36,0,38,0" Width="88">
+                            <Button Command="{Binding UpdateServicesCommand}" Click="ButtonUpdateServicesClick" Margin="5" Content="Yes" Background="{x:Null}" Width="27">
+                                <Button.CommandParameter>
+                                    <MultiBinding Converter="{StaticResource Converter}">
+                                        <Binding ElementName="givenServicesNameForUpdate" Path="Text"/>
+                                        <Binding ElementName="givenServicesNameUpdated" Path="Text"/>
+                                    </MultiBinding>
+                                </Button.CommandParameter>
+                            </Button>
+                            <Button Click="ButtonUpdateServicesClick" Margin="5" Content="No" Background="{x:Null}" Width="26" />
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+            </Grid>
+
+            <Grid x:Name="InputBoxServicesDelete" Visibility="Collapsed">
+                <Grid Opacity="0.5"/>
+                <Border MinWidth="250" Background="#4dd2ff" BorderThickness="1" CornerRadius="0,55,0,55" HorizontalAlignment="Left" 
+                        VerticalAlignment="Center"  Width="164" Margin="-87,194,0,98" Height="102">
+                    <StackPanel Margin="0,-1">
+                        <TextBlock Margin="79,5,61,5" Text="Delete Services" FontWeight="Bold" FontSize="14" FontFamily="Times New Roman" />
+                        <TextBlock Margin="37,5,5,5" Text="Which Services would you like to delete?" FontWeight="Bold" FontFamily="Times New Roman" />
+                        <TextBox x:Name="givenServicesNameForDelete"  MinWidth="150" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="47,0,51,0" Width="146" Height="19"/>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="36,0,38,0" Width="88">
+                            <Button Command="{Binding DeleteServicesCommand}" CommandParameter="{Binding ElementName=givenServicesNameForDelete, Path=Text}" 
+                                    Click="ButtonDeleteServicesClick" Margin="5" Content="Yes" Background="{x:Null}" Width="27"/>
+                            <Button Click="ButtonDeleteServicesClick" Margin="5" Content="No" Background="{x:Null}" Width="26" />
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+            </Grid>
+
+            <!--Input Boxes for sales-->
+            <Grid x:Name="InputBoxSalesAdd" Visibility="Collapsed" Margin="9,30,0,0">
+                <Grid Opacity="0.5"/>
+                <Border MinWidth="250" Background="#4dd2ff" BorderThickness="1" CornerRadius="15,15,15,15" HorizontalAlignment="Left" 
+                        VerticalAlignment="Center"  Width="265" Margin="-104,38,0,55" Height="306">
+                    <StackPanel Margin="0,-1">
+                        <TextBlock Margin="100,10,50,5" Text="New Sale" FontWeight="Bold" FontSize="14" FontFamily="Times New Roman" />
+                        <TextBlock Margin="37,5,5,5" Text="Enter the name:" FontWeight="Bold" FontFamily="Times New Roman" />
+                        <TextBox x:Name="givenName"  MinWidth="150" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="47,0,51,0" Width="146" Height="19"/>
+                        <WrapPanel>
+                            <TextBlock Margin="37,10,5,5" Text="Date Start:" FontWeight="Bold" FontFamily="Times New Roman" />
+                            <DatePicker x:Name="DatePickerStart" DisplayDateStart="6/1/2019" DisplayDateEnd="12/31/2019"  Margin="10,5,5,5" Width="130" IsTodayHighlighted="True" SelectedDate="{Binding SelectedDateStart}"/>
+                        </WrapPanel>
+                        <WrapPanel>
+                            <TextBlock Margin="37,5,5,5" Text="Date End:" FontWeight="Bold" FontFamily="Times New Roman" />
+                            <DatePicker x:Name="DatePickerEnd" DisplayDateStart="6/1/2019" DisplayDateEnd="12/31/2019"  Margin="15,0,5,5" Width="130" IsTodayHighlighted="True" SelectedDate="{Binding SelectedDateEnd}"/>
+                        </WrapPanel>
+                        <TextBlock Margin="37,5,5,5" Text="Enter the price:" FontWeight="Bold" FontFamily="Times New Roman" />
+                        <TextBox x:Name="givenPrice"  MinWidth="150" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="47,0,51,0" Width="146" Height="19"/>
+                        <TextBlock Margin="37,5,5,5" Text="Enter the number of days:" FontWeight="Bold" FontFamily="Times New Roman" />
+                        <TextBox x:Name="givenNumberOfDays"  MinWidth="150" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="47,0,51,0" Width="146" Height="19"/>
+                        <TextBlock Margin="37,5,5,5" Text="Enter the type of room:" FontWeight="Bold" FontFamily="Times New Roman" />
+                        <TextBox x:Name="givenTypeOfRoom"  MinWidth="150" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="47,0,51,0" Width="146" Height="19"/>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="36,5,38,0" Width="88">
+                            <Button Command="{Binding AddSalesCommand}" 
+                                      Margin="5" Content="Yes" Background="White" Width="27" Click="ButtonAddSalesClick">
+                                <Button.CommandParameter>
+                                    <MultiBinding Converter="{StaticResource Converter}">
+                                        <Binding ElementName="givenName" Path="Text"/>
+                                        <Binding Path="SelectedDateStart"/>
+                                        <Binding Path="SelectedDateEnd"/>
+                                        <Binding ElementName="givenPrice" Path="Text"/>
+                                        <Binding ElementName="givenNumberOfDays" Path="Text"/>
+                                        <Binding ElementName="givenTypeOfRoom" Path="Text"/>
+                                    </MultiBinding>
+                                </Button.CommandParameter>
+                            </Button>
+                            <Button Margin="5" Click="ButtonAddSalesClick" Content="No" Background="White" Width="26"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+            </Grid>
+
+            <Grid x:Name="InputBoxSalesUpdate" Visibility="Collapsed" Margin="-15,-140,0,0">
+                <Grid Opacity="0.5"/>
+                <Border MinWidth="250" Background="#4dd2ff" BorderThickness="1" CornerRadius="15,15,15,15" HorizontalAlignment="Left" 
+                        VerticalAlignment="Center"  Width="265" Margin="-77,165,0,43" Height="352">
+                    <StackPanel Margin="0,-1">
+                        <TextBlock Margin="100,10,50,5" Text="Update Sale" FontWeight="Bold" FontSize="14" FontFamily="Times New Roman" />
+                        <TextBlock Margin="37,5,5,5" Text="Enter the name:" FontWeight="Bold" FontFamily="Times New Roman" />
+                        <TextBox x:Name="givenSearchName"  MinWidth="150" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="47,0,51,0" Width="146" Height="19"/>
+                        <TextBlock Margin="37,5,5,5" Text="Enter the new name:" FontWeight="Bold" FontFamily="Times New Roman" />
+                        <TextBox x:Name="givenNewName"  MinWidth="150" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="47,0,51,0" Width="146" Height="19"/>
+                        <WrapPanel>
+                            <TextBlock Margin="20,10,5,5" Text="New Date Start:" FontWeight="Bold" FontFamily="Times New Roman" />
+                            <DatePicker x:Name="NewDatePickerStart" DisplayDateStart="6/1/2019" DisplayDateEnd="12/31/2019"  Margin="10,5,5,5" Width="130" IsTodayHighlighted="True" SelectedDate="{Binding SelectedDateStart}"/>
+                        </WrapPanel>
+                        <WrapPanel>
+                            <TextBlock Margin="20,5,5,5" Text="New Date End:" FontWeight="Bold" FontFamily="Times New Roman" />
+                            <DatePicker x:Name="NewDatePickerEnd" DisplayDateStart="6/1/2019" DisplayDateEnd="12/31/2019"  Margin="15,0,5,5" Width="130" IsTodayHighlighted="True" SelectedDate="{Binding SelectedDateEnd}"/>
+                        </WrapPanel>
+                        <TextBlock Margin="37,5,5,5" Text="Enter the new price:" FontWeight="Bold" FontFamily="Times New Roman" />
+                        <TextBox x:Name="givenNewPrice"  MinWidth="150" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="47,0,51,0" Width="146" Height="19"/>
+                        <TextBlock Margin="37,5,5,5" Text="Enter the new number of days:" FontWeight="Bold" FontFamily="Times New Roman" />
+                        <TextBox x:Name="givenNewNumberOfDays"  MinWidth="150" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="47,0,51,0" Width="146" Height="19"/>
+                        <TextBlock Margin="37,5,5,5" Text="Enter the new type of room:" FontWeight="Bold" FontFamily="Times New Roman" />
+                        <TextBox x:Name="givenNewTypeOfRoom"  MinWidth="150" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="47,0,51,0" Width="146" Height="19"/>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="36,5,38,0" Width="88">
+                            <Button Command="{Binding UpdateSalesCommand}" 
+                                      Margin="5" Content="Yes" Background="White" Width="27" Click="ButtonUpdateSalesClick">
+                                <Button.CommandParameter>
+                                    <MultiBinding Converter="{StaticResource Converter}">
+                                        <Binding ElementName="givenSearchName" Path="Text"/>
+                                        <Binding ElementName="givenNewName" Path="Text"/>
+                                        <Binding Path="SelectedDateStart"/>
+                                        <Binding Path="SelectedDateEnd"/>
+                                        <Binding ElementName="givenNewPrice" Path="Text"/>
+                                        <Binding ElementName="givenNewNumberOfDays" Path="Text"/>
+                                        <Binding ElementName="givenNewTypeOfRoom" Path="Text"/>
+                                    </MultiBinding>
+                                </Button.CommandParameter>
+                            </Button>
+                            <Button Margin="5" Click="ButtonUpdateSalesClick" Content="No" Background="White" Width="26"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+            </Grid>
+
+            <Grid x:Name="InputBoxSalesDelete" Visibility="Collapsed"  Margin="23,-50,0,0">
+                <Grid Opacity="0.5"/>
+                <Border MinWidth="250" Background="#4dd2ff" BorderThickness="1" CornerRadius="15,15,15,15" HorizontalAlignment="Left" 
+                        VerticalAlignment="Center"  Width="164" Margin="-100,248,0,86" Height="110">
+                    <StackPanel Margin="0,-1">
+                        <TextBlock Margin="79,10,61,5" Text="Delete Sale" FontWeight="Bold" FontSize="14" FontFamily="Times New Roman" />
+                        <TextBlock Margin="20,5,5,5" Text="Which Sale would you like to delete?" FontWeight="Bold" FontFamily="Times New Roman" />
+                        <TextBox x:Name="givenSalesNameForDelete"  MinWidth="150" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="47,0,51,0" Width="146" Height="19"/>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="36,5,38,0" Width="88">
+                            <Button Command="{Binding DeleteSalesCommand}" CommandParameter="{Binding ElementName=givenSalesNameForDelete, Path=Text}" Click="ButtonDeleteSalesClick" Margin="5" Content="Yes" Background="White" Width="27"/>
+                            <Button Click="ButtonDeleteSalesClick" Margin="5" Content="No" Background="White" Width="26" />
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+            </Grid>
+
+
+            <!--Input Boxes for room prices-->
+            <Grid x:Name="InputBoxRoomPriceAdd" Visibility="Collapsed" Margin="23,-200,0,0" Height="568">
+                <Grid Opacity="0.5"/>
+                <Border MinWidth="200" Background="#4dd2ff" BorderThickness="1" CornerRadius="15,15,15,15" HorizontalAlignment="Left" 
+                        VerticalAlignment="Center"  Width="253" Margin="-108,230,-13,10" Height="328">
+                    <StackPanel Margin="0,-1">
+                        <TextBlock Margin="80,10,50,5" Text="New Price for Room" FontWeight="Bold" FontSize="14" FontFamily="Times New Roman" />
+                        <TextBlock Margin="37,5,5,5" Text="Enter the price:" FontWeight="Bold" FontFamily="Times New Roman" />
+                        <TextBox x:Name="givenRoomPrice"  MinWidth="150" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="47,0,51,0" Width="146" Height="19"/>
+                        <WrapPanel>
+                            <TextBlock Margin="37,10,5,5" Text="Date Start:" FontWeight="Bold" FontFamily="Times New Roman" />
+                            <DatePicker x:Name="DatePickerStartRoomPrice" DisplayDateStart="6/1/2019" DisplayDateEnd="12/31/2019"  Margin="10,5,5,5" Width="130" IsTodayHighlighted="True" SelectedDate="{Binding SelectedDateStart}"/>
+                        </WrapPanel>
+                        <WrapPanel>
+                            <TextBlock Margin="37,5,5,5" Text="Date End:" FontWeight="Bold" FontFamily="Times New Roman" />
+                            <DatePicker x:Name="DatePickerEndRoomPrice" DisplayDateStart="6/1/2019" DisplayDateEnd="12/31/2019"  Margin="15,0,5,5" Width="130" IsTodayHighlighted="True" SelectedDate="{Binding SelectedDateEnd}"/>
+                        </WrapPanel>
+                        <TextBlock Margin="120,20,5,5" Text="Rooms" FontWeight="Bold" FontFamily="Times New Roman" Height="18" />
+                        <ListView x:Name="ListBoxRooms" ItemsSource = "{Binding Rooms, UpdateSourceTrigger=PropertyChanged}" SelectedItem = "{Binding SelectedRoom}" 
+                                Margin="80,0,50,36.4" Background="AliceBlue" Height="107">
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn Header = "Room Type" DisplayMemberBinding = "{Binding Type}" Width="70"/>
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="70,-30,38,0" Width="88">
+                            <Button Command="{Binding AddRoomPriceCommand}" 
+                                      Margin="5" Content="Yes" Background="White" Width="27" Click="ButtonAddRoomPriceClick">
+                                <Button.CommandParameter>
+                                    <MultiBinding Converter="{StaticResource Converter}">
+                                        <Binding ElementName="givenRoomPrice" Path="Text"/>
+                                        <Binding Path="SelectedDateStart"/>
+                                        <Binding Path="SelectedDateEnd"/>
+                                        <Binding Path="SelectedItem"/>
+                                    </MultiBinding>
+                                </Button.CommandParameter>
+                            </Button>
+                            <Button Margin="5" Click="ButtonAddRoomPriceClick" Content="No" Background="White" Width="26"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+            </Grid>
+
+
+            <Grid x:Name="InputBoxServicePriceAdd" Visibility="Collapsed" Margin="570,-400,0,0">
+                <Grid Opacity="0.5"/>
+                <Border MinWidth="250" Background="#4dd2ff" BorderThickness="1" CornerRadius="15,15,15,15" HorizontalAlignment="Left" 
+                        VerticalAlignment="Center"  Width="264" Margin="-54,36,-22,188" Height="336">
+                    <StackPanel Margin="0,-1">
+                        <TextBlock Margin="80,10,50,5" Text="New Price for Service" FontWeight="Bold" FontSize="14" FontFamily="Times New Roman" />
+                        <TextBlock Margin="37,5,5,5" Text="Enter the price:" FontWeight="Bold" FontFamily="Times New Roman" />
+                        <TextBox x:Name="givenServicePrice"  MinWidth="150" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="47,0,51,0" Width="146" Height="19"/>
+                        <WrapPanel>
+                            <TextBlock Margin="37,10,5,5" Text="Date Start:" FontWeight="Bold" FontFamily="Times New Roman" />
+                            <DatePicker x:Name="DatePickerStartServicePrice" DisplayDateStart="6/1/2019" DisplayDateEnd="12/31/2019"  Margin="10,5,5,5" Width="130" IsTodayHighlighted="True" SelectedDate="{Binding SelectedDateStart}"/>
+                        </WrapPanel>
+                        <WrapPanel>
+                            <TextBlock Margin="37,5,5,5" Text="Date End:" FontWeight="Bold" FontFamily="Times New Roman" />
+                            <DatePicker x:Name="DatePickerEndServicePrice" DisplayDateStart="6/1/2019" DisplayDateEnd="12/31/2019"  Margin="15,0,5,5" Width="130" IsTodayHighlighted="True" SelectedDate="{Binding SelectedDateEnd}"/>
+                        </WrapPanel>
+                        <TextBlock Margin="120,20,5,5" Text="Services" FontWeight="Bold" FontFamily="Times New Roman" Height="18" />
+                        <ListBox x:Name="ListBoxServices" ItemsSource = "{Binding AdditionalServices, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding SelectedItem}" Margin="80,0,50,36.4" Background="AliceBlue" Height="107">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Name}" />
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="70,-30,38,0" Width="88">
+                            <Button Command="{Binding AddServicePriceCommand}" 
+                                      Margin="5" Content="Yes" Background="White" Width="27" Click="ButtonAddServicePriceClick">
+                                <Button.CommandParameter>
+                                    <MultiBinding Converter="{StaticResource Converter}">
+                                        <Binding ElementName="givenServicePrice" Path="Text"/>
+                                        <Binding Path="SelectedDateStart"/>
+                                        <Binding Path="SelectedDateEnd"/>
+                                        <Binding Path="SelectedItem"/>
+                                    </MultiBinding>
+                                </Button.CommandParameter>
+                            </Button>
+                            <Button Margin="5" Click="ButtonAddServicePriceClick" Content="No" Background="White" Width="26"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+            </Grid>
+
+
+            <!--Input Boxes for employee-->
+            <Grid x:Name="InputBoxEmployeeAdd" Visibility="Collapsed">
+                <Grid Opacity="0.5"/>
+                <Border MinWidth="250" Background="#4dd2ff" BorderThickness="1" CornerRadius="0,55,0,55" HorizontalAlignment="Left" 
+                        VerticalAlignment="Center"  Width="164" Margin="-87,186,0,50" Height="158">
+                    <StackPanel Margin="0,-1">
+                        <TextBlock Margin="79,5,61,5" Text="New Employee" FontWeight="Bold" FontSize="14" FontFamily="Times New Roman" />
+                        <TextBlock Margin="37,5,5,5" Text="Enter the username:" FontWeight="Bold" FontFamily="Times New Roman" />
+                        <TextBox x:Name="givenUsername"  MinWidth="150" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="47,0,51,0" Width="146" Height="19"/>
+                        <TextBlock Margin="37,5,5,5" Text="Enter the password:" FontWeight="Bold" FontFamily="Times New Roman" />
+                        <TextBox x:Name="givenPassword"  MinWidth="150" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="47,0,51,0" Width="146" Height="19"/>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="36,0,38,0" Width="88">
+                            <Button Command="{Binding AddEmployeeCommand}" 
+                                    Click="ButtonAddEmployeeClick" Margin="5" Content="Yes" Background="{x:Null}" Width="27">
+                                <Button.CommandParameter>
+                                    <MultiBinding Converter="{StaticResource Converter}">
+                                        <Binding ElementName="givenUsername" Path="Text"/>
+                                        <Binding ElementName="givenPassword" Path="Text"/>
+                                    </MultiBinding>
+                                </Button.CommandParameter>
+                            </Button>
+                            <Button Click="ButtonAddEmployeeClick" Margin="5" Content="No" Background="{x:Null}" Width="26" />
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+            </Grid>
+
+            <Grid x:Name="InputBoxEmployeeUpdate" Visibility="Collapsed">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="194*"/>
+                    <RowDefinition Height="201*"/>
+                </Grid.RowDefinitions>
+                <Grid Opacity="0.5" Grid.RowSpan="2"/>
+                <Border MinWidth="250" Background="#4dd2ff" BorderThickness="1" CornerRadius="0,55,0,55" HorizontalAlignment="Left" 
+                        VerticalAlignment="Center"  Width="164" Margin="-77,179,0,24" Height="191" Grid.RowSpan="2">
+                    <StackPanel Margin="0,-1">
+                        <TextBlock Margin="79,5,61,5" Text="Update Employee" FontWeight="Bold" FontSize="14" FontFamily="Times New Roman" />
+                        <TextBlock Margin="37,5,5,5" Text="What user would you like to change?" FontWeight="Bold" FontFamily="Times New Roman" />
+                        <TextBox x:Name="givenUsernameForUpdate"  MinWidth="150" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="47,0,51,0" Width="146" Height="19"/>
+                        <TextBlock Margin="37,5,5,5" Text="Enter the new username:" FontWeight="Bold" FontFamily="Times New Roman" />
+                        <TextBox x:Name="givenUsernameUpdate"  MinWidth="150" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="47,0,51,0" Width="146" Height="19"/>
+                        <TextBlock Margin="37,5,5,5" Text="Enter the new password:" FontWeight="Bold" FontFamily="Times New Roman" />
+                        <TextBox x:Name="givenPasswordUpdate"  MinWidth="150" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="47,0,51,0" Width="146" Height="19"/>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="36,0,38,0" Width="88">
+                            <Button Command="{Binding UpdateEmployeeCommand}" Click="ButtonUpdateEmployeeClick" Margin="5" Content="Yes" Background="{x:Null}" Width="27">
+                                <Button.CommandParameter>
+                                    <MultiBinding Converter="{StaticResource Converter}">
+                                        <Binding ElementName="givenUsernameForUpdate" Path="Text"/>
+                                        <Binding ElementName="givenUsernameUpdate" Path="Text"/>
+                                        <Binding ElementName="givenPasswordUpdate" Path="Text"/>
+                                    </MultiBinding>
+                                </Button.CommandParameter>
+                            </Button>
+                            <Button Click="ButtonUpdateEmployeeClick" Margin="5" Content="No" Background="{x:Null}" Width="26" />
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+            </Grid>
+
+            <Grid x:Name="InputBoxEmployeeDelete" Visibility="Collapsed">
+                <Grid Opacity="0.5"/>
+                <Border MinWidth="250" Background="#4dd2ff" BorderThickness="1" CornerRadius="0,55,0,55" HorizontalAlignment="Left" 
+                        VerticalAlignment="Center"  Width="164" Margin="-77,184,0,88" Height="122">
+                    <StackPanel Margin="0,-1">
+                        <TextBlock Margin="79,5,61,5" Text="Delete Employee" FontWeight="Bold" FontSize="14" FontFamily="Times New Roman" />
+                        <TextBlock Margin="37,5,5,5" Text="Which user would you like to delete?" FontWeight="Bold" FontFamily="Times New Roman" />
+                        <TextBox x:Name="givenUsernameForDelete"  MinWidth="150" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="47,0,51,0" Width="146" Height="19"/>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="36,0,38,0" Width="88">
+                            <Button Command="{Binding DeleteEmployeeCommand}" CommandParameter="{Binding ElementName=givenUsernameForDelete, Path=Text}" 
+                                    Click="ButtonDeleteEmployeeClick" Margin="5" Content="Yes" Background="{x:Null}" Width="27"/>
+                            <Button Click="ButtonDeleteEmployeeClick" Margin="5" Content="No" Background="{x:Null}" Width="26" />
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </WrapPanel>
+    </Grid>
+</Window>
