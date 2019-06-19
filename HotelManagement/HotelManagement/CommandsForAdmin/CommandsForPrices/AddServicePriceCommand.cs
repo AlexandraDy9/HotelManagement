@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HotelManagement.Model;
+using System;
 using System.Data;
 using System.Data.SqlClient;
 using System.Windows;
@@ -16,7 +17,7 @@ namespace HotelManagement
                 float price = values[0].Equals(null) ? 0 : float.Parse(values[0].ToString());
                 DateTime dateStart = (DateTime)values[1];
                 DateTime dateEnd = (DateTime)values[2];
-                string item = values[3].ToString().Equals(null) ? "None" : values[3].ToString();
+                AdditionalServices additionalServices = (AdditionalServices)values[3];
 
                 try
                 {
@@ -32,7 +33,7 @@ namespace HotelManagement
                         SqlParameter uPrice = new SqlParameter("@Price", price);
                         SqlParameter uDataStart = new SqlParameter("@DataStart", dateStart);
                         SqlParameter uDateEnd = new SqlParameter("@DataEnd", dateEnd);
-                        SqlParameter uItem = new SqlParameter("@Item", item);
+                        SqlParameter uItem = new SqlParameter("@Item", additionalServices.Name);
 
                         myCommand.Parameters.Add(uPrice);
                         myCommand.Parameters.Add(uDataStart);

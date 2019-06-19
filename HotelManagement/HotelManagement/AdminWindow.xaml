@@ -534,7 +534,7 @@
                                         <Binding ElementName="givenRoomPrice" Path="Text"/>
                                         <Binding Path="SelectedDateStart"/>
                                         <Binding Path="SelectedDateEnd"/>
-                                        <Binding Path="SelectedItem"/>
+                                        <Binding Path="SelectedRoom"/>
                                     </MultiBinding>
                                 </Button.CommandParameter>
                             </Button>
@@ -562,7 +562,7 @@
                             <DatePicker x:Name="DatePickerEndServicePrice" DisplayDateStart="6/1/2019" DisplayDateEnd="12/31/2019"  Margin="15,0,5,5" Width="130" IsTodayHighlighted="True" SelectedDate="{Binding SelectedDateEnd}"/>
                         </WrapPanel>
                         <TextBlock Margin="120,20,5,5" Text="Services" FontWeight="Bold" FontFamily="Times New Roman" Height="18" />
-                        <ListBox x:Name="ListBoxServices" ItemsSource = "{Binding AdditionalServices, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding SelectedItem}" Margin="80,0,50,36.4" Background="AliceBlue" Height="107">
+                        <ListBox x:Name="ListBoxServices" ItemsSource = "{Binding AdditionalServices, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding SelectedServices}" Margin="80,0,50,36.4" Background="AliceBlue" Height="107">
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
                                     <TextBlock Text="{Binding Name}" />
@@ -577,7 +577,7 @@
                                         <Binding ElementName="givenServicePrice" Path="Text"/>
                                         <Binding Path="SelectedDateStart"/>
                                         <Binding Path="SelectedDateEnd"/>
-                                        <Binding Path="SelectedItem"/>
+                                        <Binding Path="SelectedServices"/>
                                     </MultiBinding>
                                 </Button.CommandParameter>
                             </Button>

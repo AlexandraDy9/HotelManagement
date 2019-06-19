@@ -1,5 +1,6 @@
 ﻿using HotelManagement.DataAccessLayer;
 using HotelManagement.Model;
+using System;
 using System.Collections.ObjectModel;
 
 namespace HotelManagement
@@ -8,7 +9,11 @@ namespace HotelManagement
     {
         private ObservableCollection<Room> rooms;
         private ObservableCollection<Features> features;
+        private ObservableCollection<AdditionalServices> additionalServices;
         private Room selectedRoom;
+        private AdditionalServices selectedServices;
+        private DateTime? selectedDateStart;
+        private DateTime? selectedDateEnd;
         private User user;
 
         public ObservableCollection<Room> Rooms
@@ -31,12 +36,53 @@ namespace HotelManagement
             }
         }
 
+        public ObservableCollection<AdditionalServices> AdditionalServices
+        {
+            get => additionalServices;
+            set
+            {
+                additionalServices = value;
+                OnPropertyChanged();
+            }
+        }
+
+
         public Room SelectedRoom
         {
             get => selectedRoom;
             set
             {
                 selectedRoom = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public DateTime? SelectedDateEnd
+        {
+            get => selectedDateEnd;
+            set
+            {
+                selectedDateEnd = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public DateTime? SelectedDateStart
+        {
+            get => selectedDateStart;
+            set
+            {
+                selectedDateStart = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public AdditionalServices SelectedServices
+        {
+            get => selectedServices;
+            set
+            {
+                selectedServices = value;
                 OnPropertyChanged();
             }
         }
@@ -80,7 +126,6 @@ namespace HotelManagement
         public LogOutCommand LogOutCommand { get; }
         public RoomDetailsCommand RoomDetailsCommand { get; }
 
-
         public AdminViewModel(User user)
         {
             User = user;
@@ -89,6 +134,9 @@ namespace HotelManagement
 
             Features = new ObservableCollection<Features>();
             Features = FeaturesDAL.GetAllFeatures();
+
+            AdditionalServices = new ObservableCollection<AdditionalServices>();
+            AdditionalServices = AdditionalServicesDAL.GetAllAdditionalServices();
 
             AddRoomCommand = new AddRoomCommand();
             DeleteRoomCommand = new DeleteRoomCommand();
